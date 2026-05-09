@@ -1,0 +1,43 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.cursor/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.env
+.python-version
+
+# Node (in case sub-tooling is added later)
+node_modules/
+
+# Build / output
+dist/
+build/
+*.log
+
+# User-private data — never commit your real portfolio
+# (the published file is the example template; rename your real one to keep it local)
+**/skills/fa-orchestrator/references/stock-universe.private.md
+**/skills/fa-orchestrator/references/stock-universe.local.md
+
+# Generated FA reports — these are personal research artefacts
+company-analysis/
+**/company-analysis/
+
+# Misc temporary
+*.bak
+*.tmp
+_writetest.txt

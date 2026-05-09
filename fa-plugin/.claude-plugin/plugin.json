@@ -1,0 +1,15 @@
+{
+  "name": "fa-plugin",
+  "version": "1.0.0",
+  "description": "Phase 1 Fundamental Analysis for NSE-listed stocks. Runs management integrity (10 pts), management skillset (4 pts), industry stage + Porter's 5 Forces (8 pts), balance sheet health (10 pts), P&L health (10 pts), cash flow health (7 pts), and return ratios (7 pts) — synthesized into a RAG-rated investor report saved as Markdown and PDF.",
+  "author": {
+    "name": "Sai"
+  },
+  "keywords": [
+    "fundamental-analysis",
+    "investing",
+    "nse",
+    "stocks",
+    "equity-research"
+  ]
+}
