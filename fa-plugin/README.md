@@ -47,13 +47,13 @@ customise — the version in this repo is a stub example, not stock advice).
 ### Claude Code
 
 ```bash
-/plugin install https://github.com/<your-github-username>/sr-plugins/tree/main/fa-plugin
+/plugin install https://github.com/sr-codefreak/sr-plugins/tree/main/fa-plugin
 ```
 
 Or clone and install locally:
 
 ```bash
-git clone https://github.com/<your-github-username>/sr-plugins.git
+git clone https://github.com/sr-codefreak/sr-plugins.git
 /plugin install ./sr-plugins/fa-plugin
 ```
 

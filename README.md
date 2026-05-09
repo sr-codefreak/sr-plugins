@@ -25,13 +25,13 @@ extractor). Each is independent — install only what you want.
 ### Claude Code
 
 ```bash
-/plugin install https://github.com/<your-github-username>/sr-plugins/tree/main/fa-plugin
+/plugin install https://github.com/sr-codefreak/sr-plugins/tree/main/fa-plugin
 ```
 
 Or, once a marketplace is set up:
 
 ```bash
-/plugin marketplace add <your-github-username>/sr-plugins
+/plugin marketplace add sr-codefreak/sr-plugins
 /plugin install fa-plugin
 ```
 
@@ -44,7 +44,7 @@ Or, once a marketplace is set up:
 ### Local install (for developing or modifying)
 
 ```bash
-git clone https://github.com/<your-github-username>/sr-plugins.git
+git clone https://github.com/sr-codefreak/sr-plugins.git
 # In Claude Code:
 /plugin install ./sr-plugins/fa-plugin
 ```
