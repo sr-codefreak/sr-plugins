@@ -1,0 +1,27 @@
+{
+  "name": "sr-plugins",
+  "description": "Claude Code / Cowork plugins for personal investing workflows (research aids, not investment advice). See DISCLAIMER.md in the repo root.",
+  "owner": {
+    "name": "Sai Rajesh",
+    "email": "sr-codefreak@users.noreply.github.com"
+  },
+  "plugins": [
+    {
+      "name": "fa-plugin",
+      "description": "Phase 1 fundamental analysis for NSE-listed stocks — management, industry, balance sheet, P&L, cash flow, and return ratios, synthesized into a RAG-rated Markdown + PDF report.",
+      "source": "./fa-plugin",
+      "license": "MIT",
+      "repository": "https://github.com/sr-codefreak/sr-plugins",
+      "homepage": "https://github.com/sr-codefreak/sr-plugins/tree/main/fa-plugin",
+      "keywords": [
+        "fundamental-analysis",
+        "investing",
+        "nse",
+        "stocks",
+        "equity-research"
+      ],
+      "category": "finance",
+      "tags": ["india", "nse", "equity-research", "fundamental-analysis"]
+    }
+  ]
+}
