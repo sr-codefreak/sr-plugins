@@ -50,6 +50,13 @@ customise — the version in this repo is a stub example, not stock advice).
 /plugin install https://github.com/sr-codefreak/sr-plugins/tree/main/fa-plugin
 ```
 
+Or install from the **sr-plugins** marketplace (same repo, [`marketplace.json`](../.claude-plugin/marketplace.json)):
+
+```bash
+/plugin marketplace add sr-codefreak/sr-plugins
+/plugin install fa-plugin@sr-plugins
+```
+
 Or clone and install locally:
 
 ```bash

@@ -28,11 +28,11 @@ extractor). Each is independent — install only what you want.
 /plugin install https://github.com/sr-codefreak/sr-plugins/tree/main/fa-plugin
 ```
 
-Or, once a marketplace is set up:
+Or via the **marketplace** catalog ([`.claude-plugin/marketplace.json`](./.claude-plugin/marketplace.json)):
 
 ```bash
 /plugin marketplace add sr-codefreak/sr-plugins
-/plugin install fa-plugin
+/plugin install fa-plugin@sr-plugins
 ```
 
 ### Cowork
@@ -59,6 +59,8 @@ sr-plugins/
 ├── CONTRIBUTING.md          # how to propose changes
 ├── CODE_OF_CONDUCT.md       # community guidelines
 ├── .gitignore
+├── .claude-plugin/
+│   └── marketplace.json     # Claude Code marketplace catalog (lists fa-plugin)
 └── fa-plugin/
     ├── README.md
     ├── .claude-plugin/plugin.json
