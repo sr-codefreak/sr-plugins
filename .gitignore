@@ -23,10 +23,13 @@ venv/
 # Node (in case sub-tooling is added later)
 node_modules/
 
-# Build / output
+# Build / output (root-level artifact dirs only — not hermes-skills/build/)
 dist/
-build/
+/build/
 *.log
+
+# Hermes BUILD skill pack (must not be ignored by /build/ above)
+!hermes-skills/build/
 
 # User-private data — never commit your real portfolio
 # (the published file is the example template; rename your real one to keep it local)
