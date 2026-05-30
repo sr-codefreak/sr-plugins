@@ -25,7 +25,7 @@ Runs a full qualitative + quantitative Phase 1 analysis on an NSE ticker:
 
 Output is a RAG-rated (Red / Amber / Green) report saved to
 `company-analysis/{ticker-slug}/fa-phase1-{YYYY-MM-DD}.md` and rendered as
-a 6-page PDF.
+a PDF (V1: management + industry only; V2: full report including financials).
 
 Phase 2 (P/E, DCF, PEG, valuation verdict) is out of scope for this plugin.
 
@@ -72,8 +72,8 @@ git clone https://github.com/sr-codefreak/sr-plugins.git
 
 ## Dependencies (PDF generation only)
 
-The orchestrator's "save output" step shells out to
-`scripts/generate_fa_pdf.py`, which needs:
+The orchestrator's "save output" step shells out to a PDF script (see below),
+which needs:
 
 - **Python 3.10+** with these packages:
   ```bash
@@ -88,6 +88,22 @@ The orchestrator's "save output" step shells out to
 
 If a dependency is missing, the orchestrator falls back to saving only the
 Markdown report and tells you what's missing.
+
+### PDF templates
+
+| Script | Template | Coverage |
+| ------ | -------- | -------- |
+| `scripts/generate_fa_pdf.py` | `templates/fa_report.html` | Cover, exec summary, management, industry (~6 pages) |
+| `scripts/generate_fa_pdf_v2.py` | `templates/fa_report_v2.html` | V1 sections plus balance sheet, P&L, cash flow, return ratios, valuation, multi-bagger screening, verdict |
+
+Manual render (from the `fa-plugin/scripts` directory):
+
+```bash
+python3 generate_fa_pdf.py path/to/report.md path/to/report.pdf
+python3 generate_fa_pdf_v2.py path/to/report.md path/to/report.pdf
+```
+
+`generate_fa_pdf_v2.py` imports helpers from `generate_fa_pdf.py`; both must stay in `scripts/`.
 
 ## Configuration
 
@@ -120,8 +136,11 @@ fa-plugin/
 │   └── fa-balancesheet/, fa-profitloss/, fa-cashflow/, fa-returnratios/
 ├── agents/                        # parallel research subagents
 └── scripts/
-    ├── generate_fa_pdf.py         # Markdown → 6-page PDF renderer
-    └── templates/fa_report.html
+    ├── generate_fa_pdf.py         # Markdown → V1 PDF (mgmt + industry)
+    ├── generate_fa_pdf_v2.py      # Markdown → V2 PDF (full FA report)
+    └── templates/
+        ├── fa_report.html
+        └── fa_report_v2.html
 ```
 
 ## Methodology credits
