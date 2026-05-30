@@ -15,7 +15,8 @@ can be installed standalone.
 
 | Plugin                       | What it does                                                                                                                          |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| [`fa-plugin`](./fa-plugin/)  | Phase 1 fundamental analysis for NSE-listed stocks. Scores management, industry, balance sheet, P&L, cash flow, and return ratios.   |
+| [`fa-plugin`](./fa-plugin/)  | Phase 1 fundamental analysis for NSE-listed stocks (Claude Code / Cowork plugin). |
+| [`hermes-skills`](./hermes-skills/) | Same FA workflow + optional BUILD pipeline as Hermes Agent skills under `~/.hermes/skills/`. |
 
 More may show up here over time (e.g. a technical-analysis plugin, an annual-report
 extractor). Each is independent — install only what you want.
@@ -61,13 +62,11 @@ sr-plugins/
 ├── .gitignore
 ├── .claude-plugin/
 │   └── marketplace.json     # Claude Code marketplace catalog (lists fa-plugin)
-└── fa-plugin/
-    ├── README.md
-    ├── .claude-plugin/plugin.json
-    ├── commands/            # slash commands
-    ├── skills/              # orchestrator + sub-skills + leaves
-    ├── agents/              # parallel research subagents
-    └── scripts/             # PDF generator, templates
+├── fa-plugin/               # Claude Code / Cowork plugin
+│   ├── skills/, agents/, scripts/
+└── hermes-skills/           # Hermes Agent installable packs
+    ├── investing/           # FA orchestrator + sub-skills + PDF scripts
+    └── build/               # Generic BUILD pipeline (PRD → deploy)
 ```
 
 ## Development

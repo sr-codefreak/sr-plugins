@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FA Report V2 — {{ company_name }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════════
+   Dezerv Futurist — adapted for A4 PDF
+   Dark canvas, peach + teal + cyan accents
+   ════════════════════════════════════════════════ */
+:root {
+  --bg-primary:  #0A0A0B;
+  --bg-elevated: #15151A;
+  --bg-subtle:   #1F1F26;
+  --border:      #2A2A33;
+  --border-soft: #1E1E26;
+
+  --text-primary: #F5F5F0;
+  --text-muted:   #9A9AA5;
+  --text-dim:     #5C5C66;
+
+  --peach: #FBC392;
+  --teal:  #2D9B95;
+  --cyan:  #6EF0FF;
+  --warn:  #F5B85C;
+  --danger:#FF5C5C;
+  --info:  #0071E3;
+
+  /* RAG mapping (no emoji per Dezerv guide) */
+  --rag-good: var(--teal);
+  --rag-warn: var(--warn);
+  --rag-bad:  var(--danger);
+  --rag-na:   var(--text-dim);
+
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-italic:  'Instrument Serif', Georgia, serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'IBM Plex Mono', ui-monospace, monospace;
+}
+
+@page { size: A4; margin: 1.4cm 1.6cm 1.4cm 1.6cm; background: var(--bg-primary); }
+@media print {
+  html, body { background: var(--bg-primary) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 10pt;
+  line-height: 1.55;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-feature-settings: "tnum","zero"; }
+
+/* ── Pages ── */
+.page {
+  break-before: page; page-break-before: always;
+  min-height: 25.5cm; position: relative;
+  background: var(--bg-primary);
+  break-inside: avoid-page;
+  padding-bottom: 28pt;
+}
+.page:first-child { break-before: auto; page-break-before: auto; }
+
+.page-footer {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  border-top: 1px solid var(--border);
+  padding-top: 6pt;
+  font-size: 7.5pt;
+  color: var(--text-dim);
+  display: flex; justify-content: space-between;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.page-footer .num { letter-spacing: 0; text-transform: none; }
+
+/* ── Eyebrow caption (Dezerv signature) ── */
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 7.5pt;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── Section headings ── */
+.section-heading {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 22pt;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  margin-bottom: 4pt;
+}
+.section-heading .accent {
+  font-family: var(--font-italic);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--peach);
+}
+.section-meta {
+  font-size: 8pt;
+  color: var(--text-dim);
+  margin-bottom: 16pt;
+  font-family: var(--font-mono);
+}
+
+.sub-heading {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 11pt;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 18pt 0 8pt;
+  padding-bottom: 4pt;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ════════════════════════════════════════════════
+   COVER
+   ════════════════════════════════════════════════ */
+.cover {
+  display: flex; flex-direction: column;
+  min-height: 26.5cm;
+  padding: 0 !important;
+  position: relative;
+}
+.cover-inner {
+  flex: 1;
+  display: flex; flex-direction: column;
+  padding: 2cm 1.6cm 1.6cm;
+  position: relative;
+}
+.cover-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 4cm;
+}
+.cover-mark {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.cover-mark img { width: 100%; height: 100%; object-fit: contain; }
+.cover-meta-top {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.cover-meta-top .label {
+  font-size: 7pt;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: block;
+  margin-top: 6pt;
+}
+
+.cover-eyebrow {
+  font-size: 8pt;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--peach);
+  margin-bottom: 14pt;
+  font-weight: 500;
+}
+.cover-company {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 56pt;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  margin-bottom: 14pt;
+  color: var(--text-primary);
+}
+.cover-company .italic {
+  font-family: var(--font-italic);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--peach);
+}
+.cover-tagline {
+  font-family: var(--font-italic);
+  font-style: italic;
+  font-size: 16pt;
+  line-height: 1.35;
+  color: var(--text-muted);
+  max-width: 80%;
+  margin-bottom: auto;
+}
+
+.cover-verdict {
+  display: flex; align-items: baseline; gap: 18pt;
+  margin-top: 1.6cm;
+  padding-top: 18pt;
+  border-top: 1px solid var(--border);
+}
+.cover-verdict-label {
+  font-size: 8pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.cover-verdict-value {
+  font-family: var(--font-display);
+  font-size: 32pt;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.cover-verdict-invest  .cover-verdict-value { color: var(--teal); }
+.cover-verdict-monitor .cover-verdict-value { color: var(--peach); }
+.cover-verdict-avoid   .cover-verdict-value { color: var(--danger); }
+
+.cover-pillars {
+  margin-top: 22pt;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10pt;
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.cover-pillar {
+  border-top: 1px solid var(--border);
+  padding-top: 6pt;
+}
+.cover-pillar .num { color: var(--text-primary); font-size: 9pt; display: block; margin-top: 2pt; letter-spacing: 0; text-transform: none; }
+
+.cover-footer-bar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 12pt 1.6cm;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--text-dim);
+  display: flex; justify-content: space-between;
+  letter-spacing: 0.04em;
+}
+
+/* ════════════════════════════════════════════════
+   RAG dot — replaces emoji
+   ════════════════════════════════════════════════ */
+.rag {
+  display: inline-flex; align-items: center; gap: 6pt;
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.rag::before {
+  content: ""; display: inline-block;
+  width: 8pt; height: 8pt; border-radius: 50%;
+  background: var(--rag-na);
+  flex-shrink: 0;
+}
+.rag-good::before { background: var(--rag-good); }
+.rag-warn::before { background: var(--rag-warn); }
+.rag-bad::before  { background: var(--rag-bad); }
+.rag-na::before   { background: var(--rag-na); }
+
+.rag-good { color: var(--teal); }
+.rag-warn { color: var(--warn); }
+.rag-bad  { color: var(--danger); }
+.rag-na   { color: var(--text-dim); }
+
+.rag-dot-only {
+  display: inline-block;
+  width: 10pt; height: 10pt; border-radius: 50%;
+  background: var(--rag-na);
+  vertical-align: middle;
+}
+.rag-dot-only.rag-good { background: var(--teal); }
+.rag-dot-only.rag-warn { background: var(--warn); }
+.rag-dot-only.rag-bad  { background: var(--danger); }
+
+/* ════════════════════════════════════════════════
+   EXEC SUMMARY
+   ════════════════════════════════════════════════ */
+.scorecard-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 8pt;
+  margin-bottom: 18pt;
+}
+.scorecard {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  padding: 12pt 10pt;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+  position: relative;
+}
+.scorecard-label {
+  font-size: 6.5pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10pt;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.scorecard-value {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16pt;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 6pt;
+}
+.scorecard-sub {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--text-dim);
+}
+
+.summary-cols {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 14pt;
+}
+.summary-col-head {
+  display: flex; align-items: center; gap: 6pt;
+  font-family: var(--font-display);
+  font-size: 10pt;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  margin-bottom: 8pt;
+  padding-bottom: 6pt;
+  border-bottom: 1px solid var(--border);
+}
+.risks-head     { color: var(--danger); }
+.positives-head { color: var(--teal); }
+
+.summary-item {
+  padding: 8pt 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+.summary-item:last-child { border-bottom: none; }
+.summary-item-title {
+  font-family: var(--font-display);
+  font-size: 9pt;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 3pt;
+}
+.summary-item-body {
+  font-size: 8pt;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.recommended-box {
+  margin-top: 16pt;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  padding: 12pt 16pt;
+  font-size: 9pt;
+  line-height: 1.55;
+  color: var(--text-primary);
+  position: relative;
+}
+.recommended-box::before {
+  content: ""; position: absolute; left: 0; top: 16pt; bottom: 16pt;
+  width: 2px; background: var(--peach);
+}
+.recommended-box .label {
+  font-family: var(--font-body);
+  font-size: 7.5pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--peach);
+  font-weight: 500;
+  margin-bottom: 4pt;
+  display: block;
+}
+
+/* ════════════════════════════════════════════════
+   PEOPLE
+   ════════════════════════════════════════════════ */
+.people-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 14pt; margin-top: 12pt;
+}
+.person-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  padding: 18pt 14pt;
+  text-align: center;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+}
+.person-photo-wrap {
+  width: 76px; height: 76px; border-radius: 50%; overflow: hidden;
+  margin: 0 auto 12pt;
+  border: 1px solid var(--border);
+  background: var(--bg-subtle);
+}
+.person-photo { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+.person-name {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 10pt;
+  letter-spacing: -0.005em;
+  margin-bottom: 3pt;
+}
+.person-title {
+  font-size: 8pt;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.mgmt-summary-box {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  padding: 14pt 18pt;
+  margin-bottom: 16pt;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+/* ════════════════════════════════════════════════
+   ANALYSIS TABLES
+   ════════════════════════════════════════════════ */
+.analysis-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8pt;
+  margin-bottom: 12pt;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  overflow: hidden;
+}
+.analysis-table th {
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  padding: 8pt 10pt;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 7pt;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.analysis-table td {
+  padding: 9pt 10pt;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+  color: var(--text-primary);
+}
+.analysis-table tr:last-child td { border-bottom: none; }
+
+.col-num    { width: 5%;  color: var(--text-dim); font-family: var(--font-mono); font-size: 7.5pt; }
+.col-crit   { width: 24%; font-family: var(--font-display); font-weight: 500; font-size: 8.5pt; color: var(--text-primary); }
+.col-find   { width: 60%; font-size: 8pt; line-height: 1.5; color: var(--text-muted); }
+.col-status { width: 11%; }
+
+.score-line {
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  margin: 8pt 0 14pt;
+  display: flex; gap: 18pt; flex-wrap: wrap; align-items: center;
+  color: var(--text-muted);
+}
+.score-line .num { color: var(--text-primary); font-size: 9pt; }
+.score-arrow {
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 10pt;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  text-transform: none;
+}
+
+/* ── Callouts ── */
+.dual-callouts {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12pt; margin: 8pt 0 14pt;
+}
+.callout-box {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  padding: 12pt 14pt;
+  font-size: 8pt;
+  line-height: 1.5;
+  position: relative;
+  overflow: hidden;
+}
+.callout-box::before {
+  content: ""; position: absolute; left: 0; top: 14pt; bottom: 14pt;
+  width: 2px;
+}
+.callout-concerns::before  { background: var(--danger); }
+.callout-strengths::before { background: var(--teal); }
+.callout-context::before   { background: var(--cyan); }
+
+.callout-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 9pt;
+  margin-bottom: 8pt;
+  letter-spacing: -0.005em;
+}
+.callout-concerns  .callout-title { color: var(--danger); }
+.callout-strengths .callout-title { color: var(--teal); }
+.callout-context   .callout-title { color: var(--cyan); }
+
+.callout-item {
+  padding: 3pt 0;
+  color: var(--text-primary);
+  position: relative;
+  padding-left: 12pt;
+}
+.callout-item::before {
+  content: "\2192";
+  position: absolute; left: 0;
+  font-family: var(--font-mono);
+}
+.callout-concerns  .callout-item::before { color: var(--danger); }
+.callout-strengths .callout-item::before { color: var(--teal); }
+.callout-context   .callout-item::before { color: var(--cyan); }
+
+/* ── Dimension breakdown ── */
+.dim-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8pt;
+  margin-top: 10pt;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  overflow: hidden;
+}
+.dim-table th {
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  padding: 7pt 10pt;
+  text-align: left;
+  font-size: 7pt;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.dim-table td {
+  padding: 8pt 10pt;
+  border-bottom: 1px solid var(--border-soft);
+}
+.dim-name {
+  width: 32%;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 9pt;
+}
+.dim-score {
+  width: 56%;
+  color: var(--text-muted);
+  font-size: 8pt;
+}
+.dim-verdict {
+  width: 12%; text-align: right;
+}
+.dim-overall td {
+  background: var(--bg-subtle) !important;
+  border-top: 1px solid var(--border);
+  padding-top: 10pt; padding-bottom: 10pt;
+}
+.dim-overall .dim-name { color: var(--peach); }
+
+/* ── Second-gen mini-table ── */
+.sg-table {
+  font-size: 7.5pt; width: 100%; border-collapse: collapse;
+  margin: 10pt 0;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  overflow: hidden;
+}
+.sg-table th {
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  padding: 6pt 10pt;
+  text-align: left;
+  font-size: 7pt;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.sg-table td { padding: 7pt 10pt; border-bottom: 1px solid var(--border-soft); color: var(--text-primary); }
+.sg-strong { color: var(--teal); font-weight: 500; }
+.sg-weak   { color: var(--warn); font-weight: 500; }
+
+/* ════════════════════════════════════════════════
+   INDUSTRY
+   ════════════════════════════════════════════════ */
+.products-industry-top {
+  display: grid; grid-template-columns: 1.1fr 0.9fr;
+  gap: 18pt; margin-bottom: 16pt;
+  align-items: start;
+}
+.products-grid {
+  display: flex; flex-wrap: wrap; gap: 8pt;
+  margin-top: 8pt;
+}
+.product-item {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8pt;
+  padding: 10pt; text-align: center; min-width: 80px;
+}
+.product-item img { max-height: 48px; max-width: 110px; object-fit: contain; filter: brightness(0.95); }
+.product-name {
+  font-family: var(--font-mono);
+  font-size: 7pt; color: var(--text-muted); margin-top: 4pt;
+}
+
+.stage-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  padding: 18pt;
+  margin-top: 8pt;
+  position: relative;
+}
+.stage-card::before {
+  content: ""; position: absolute; top: 0; left: 18pt; right: 18pt;
+  height: 2px;
+}
+.stage-growth::before   { background: var(--teal); }
+.stage-pioneer::before  { background: var(--cyan); }
+.stage-maturity::before { background: var(--peach); }
+.stage-decline::before  { background: var(--danger); }
+
+.stage-label {
+  font-size: 7pt; text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--text-muted); margin-bottom: 8pt;
+}
+.stage-value {
+  font-family: var(--font-display);
+  font-size: 24pt; font-weight: 600;
+  letter-spacing: -0.025em;
+  margin-bottom: 10pt; line-height: 1;
+}
+.stage-growth   .stage-value { color: var(--teal); }
+.stage-pioneer  .stage-value { color: var(--cyan); }
+.stage-maturity .stage-value { color: var(--peach); }
+.stage-decline  .stage-value { color: var(--danger); }
+.stage-rationale {
+  font-size: 8pt; color: var(--text-muted); line-height: 1.55;
+}
+
+.signals-table {
+  width: 100%; border-collapse: collapse; font-size: 7.5pt;
+  margin-bottom: 14pt;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  overflow: hidden;
+}
+.signals-table th {
+  background: var(--bg-subtle); color: var(--text-muted);
+  padding: 6pt 10pt; text-align: left;
+  font-size: 7pt; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.signals-table td { padding: 7pt 10pt; border-bottom: 1px solid var(--border-soft); color: var(--text-primary); }
+.signals-table td:first-child { font-family: var(--font-display); font-weight: 500; }
+
+.industry-overall-bar {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  padding: 12pt 16pt; margin-top: 12pt;
+  font-size: 9pt;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.industry-overall-bar strong { color: var(--peach); font-weight: 500; }
+.industry-overall-bar .summary-text { color: var(--text-muted); font-size: 8pt; }
+
+/* ════════════════════════════════════════════════
+   FINANCIAL HEALTH DASHBOARD
+   ════════════════════════════════════════════════ */
+.fin-pillar-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 10pt; margin: 10pt 0 18pt;
+}
+.fin-pillar {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  padding: 14pt 12pt;
+  position: relative;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+}
+.fin-pillar::before {
+  content: ""; position: absolute; top: 0; left: 14pt; right: 14pt;
+  height: 2px;
+}
+.fin-pillar.rag-top-good::before { background: var(--teal); }
+.fin-pillar.rag-top-warn::before { background: var(--peach); }
+.fin-pillar.rag-top-bad::before  { background: var(--danger); }
+
+.fin-pillar-letter {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--text-dim);
+  letter-spacing: 0.12em;
+}
+.fin-pillar-name {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 10pt;
+  letter-spacing: -0.005em;
+  margin: 4pt 0 12pt;
+}
+.fin-pillar-score {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 22pt;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.fin-pillar-score.good { color: var(--teal); }
+.fin-pillar-score.warn { color: var(--peach); }
+.fin-pillar-score.bad  { color: var(--danger); }
+.fin-pillar-tag {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--text-dim);
+  margin-top: 6pt;
+  letter-spacing: 0.04em;
+}
+
+.fin-summary-box {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  padding: 14pt 18pt;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin-top: 14pt;
+}
+.fin-summary-box strong {
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--peach);
+}
+
+.fin-headline-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 10pt;
+}
+.fin-stat {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  padding: 14pt 12pt;
+}
+.fin-stat-label {
+  font-size: 6.5pt; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8pt;
+}
+.fin-stat-value {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 22pt;
+  line-height: 1;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+.fin-stat-value.value-good { color: var(--teal); }
+.fin-stat-value.value-warn { color: var(--peach); }
+.fin-stat-value.value-bad  { color: var(--danger); }
+.fin-stat-sub {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--text-dim);
+  margin-top: 6pt;
+}
+
+/* ════════════════════════════════════════════════
+   VALUATION
+   ════════════════════════════════════════════════ */
+.val-banner {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--danger);
+  border-radius: 0 12pt 12pt 0;
+  padding: 14pt 18pt;
+  margin: 8pt 0 14pt;
+}
+.val-banner-eyebrow {
+  font-size: 7.5pt; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--danger); font-weight: 500;
+  margin-bottom: 4pt;
+}
+.val-banner-text {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 12pt;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+.val-banner-text .italic {
+  font-family: var(--font-italic);
+  font-style: italic;
+  color: var(--peach);
+  font-weight: 400;
+}
+.val-banner-sub {
+  font-size: 7.5pt; color: var(--text-muted); margin-top: 4pt;
+  font-family: var(--font-mono);
+}
+
+.val-multiples-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 10pt; margin: 10pt 0 14pt;
+}
+.val-multiple {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  padding: 12pt;
+}
+.val-multiple-label {
+  font-size: 7pt; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6pt;
+}
+.val-multiple-value {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 20pt;
+  line-height: 1;
+  letter-spacing: -0.015em;
+  color: var(--danger);
+}
+.val-multiple-peer {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--text-dim);
+  margin-top: 6pt;
+}
+
+/* ════════════════════════════════════════════════
+   MULTI-BAGGER
+   ════════════════════════════════════════════════ */
+.mb-verdict-box {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 18pt;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  padding: 18pt 22pt;
+  margin: 10pt 0 14pt;
+  position: relative;
+  overflow: hidden;
+}
+.mb-verdict-box::before {
+  content: ""; position: absolute; top: 0; left: 22pt; right: 22pt;
+  height: 2px;
+  background: var(--peach);
+}
+.mb-verdict-box.is-candidate::before { background: var(--teal); }
+.mb-verdict-glyph {
+  font-family: var(--font-display);
+  font-size: 36pt;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--peach);
+}
+.mb-verdict-box.is-candidate .mb-verdict-glyph { color: var(--teal); }
+.mb-verdict-tag {
+  font-size: 7pt; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 4pt;
+}
+.mb-verdict-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 16pt;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.mb-verdict-title .italic {
+  font-family: var(--font-italic);
+  font-style: italic;
+  color: var(--peach);
+  font-weight: 400;
+}
+.mb-verdict-time {
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  color: var(--text-dim);
+  margin-top: 4pt;
+}
+.mb-verdict-score {
+  text-align: right;
+}
+.mb-verdict-score-num {
+  font-family: var(--font-mono);
+  font-size: 22pt;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text-primary);
+}
+.mb-verdict-score-tag {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--text-dim);
+  margin-top: 4pt;
+  letter-spacing: 0.04em;
+}
+
+/* ════════════════════════════════════════════════
+   FINAL VERDICT
+   ════════════════════════════════════════════════ */
+.verdict-table {
+  width: 100%; border-collapse: collapse; font-size: 9pt;
+  margin: 12pt 0 16pt;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  overflow: hidden;
+}
+.verdict-table th {
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  padding: 9pt 14pt;
+  text-align: left;
+  font-size: 7pt;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.verdict-table td {
+  padding: 10pt 14pt;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: middle;
+}
+.verdict-table .vt-dim {
+  width: 26%;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 9.5pt;
+  color: var(--text-primary);
+}
+.verdict-table .vt-detail {
+  width: 60%; font-size: 8.5pt;
+  color: var(--text-muted); line-height: 1.5;
+}
+.verdict-table .vt-rag { width: 14%; }
+.verdict-table tr.vt-overall td {
+  background: var(--bg-subtle) !important;
+  border-top: 1px solid var(--border);
+  padding: 14pt;
+}
+.verdict-table tr.vt-overall .vt-dim {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 11pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--peach);
+}
+.verdict-table tr.vt-overall .vt-detail {
+  color: var(--text-primary);
+  font-size: 9pt;
+}
+
+.entry-triggers-box {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  padding: 16pt 20pt;
+  margin-top: 14pt;
+  position: relative;
+  overflow: hidden;
+}
+.entry-triggers-box::before {
+  content: ""; position: absolute; top: 0; left: 20pt; right: 20pt;
+  height: 2px; background: var(--cyan);
+}
+.entry-triggers-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 11pt;
+  letter-spacing: -0.01em;
+  margin-bottom: 10pt;
+  color: var(--text-primary);
+}
+.entry-trigger-item {
+  font-size: 9pt;
+  padding: 4pt 0 4pt 16pt;
+  position: relative;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+.entry-trigger-item::before {
+  content: "\2192";
+  position: absolute; left: 0;
+  color: var(--cyan);
+  font-family: var(--font-mono);
+}
+
+.final-rec-box {
+  margin-top: 14pt;
+  background: var(--bg-elevated);
+  border: 1px solid var(--peach);
+  border-radius: 12pt;
+  padding: 18pt 20pt;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: var(--text-primary);
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(251, 195, 146, 0.08);
+}
+.final-rec-title {
+  font-family: var(--font-body);
+  font-size: 7.5pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--peach);
+  margin-bottom: 8pt;
+  font-weight: 500;
+}
+.final-rec-box strong {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--peach);
+}
+
+/* ════════════════════════════════════════════════
+   DATA SOURCES
+   ════════════════════════════════════════════════ */
+.sources-table {
+  width: 100%; border-collapse: collapse; font-size: 7.5pt;
+  margin-top: 12pt;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  overflow: hidden;
+}
+.sources-table th {
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  padding: 7pt 10pt;
+  text-align: left;
+  font-size: 7pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.sources-table td {
+  padding: 6pt 10pt;
+  border-bottom: 1px solid var(--border-soft);
+  color: var(--text-primary);
+  vertical-align: top;
+}
+.sources-table .col-point  { width: 32%; font-family: var(--font-display); font-weight: 500; }
+.sources-table .col-source { width: 52%; word-break: break-all; color: var(--text-muted); }
+.sources-table .col-date   { width: 16%; white-space: nowrap; font-family: var(--font-mono); color: var(--text-dim); }
+
+.disclaimer-box {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 12pt;
+  padding: 14pt 18pt;
+  margin-top: 22pt;
+  font-size: 8pt;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.disclaimer-box strong { color: var(--peach); font-weight: 500; }
+</style>
+</head>
+<body>
+
+{# ══════════ MACROS ══════════ #}
+{% macro page_footer() %}
+  <div class="page-footer">
+    <span>{{ company_name }} · {{ ticker }} · Phase 1 FA</span>
+    <span class="num">{{ date }}</span>
+  </div>
+{% endmacro %}
+
+{% macro rag_badge(verdict) %}
+  {%- set v = verdict|string -%}
+  {%- if '🟢' in v -%}<span class="rag-dot-only rag-good"></span>
+  {%- elif '🟡' in v -%}<span class="rag-dot-only rag-warn"></span>
+  {%- elif '🔴' in v -%}<span class="rag-dot-only rag-bad"></span>
+  {%- else -%}<span class="rag-dot-only"></span>
+  {%- endif -%}
+{% endmacro %}
+
+{% macro rag_label(verdict, label="") %}
+  {%- set v = verdict|string -%}
+  {%- if '🟢' in v or 'INVEST' in v -%}<span class="rag rag-good">{{ label or 'Good' }}</span>
+  {%- elif '🟡' in v or 'MONITOR' in v -%}<span class="rag rag-warn">{{ label or 'Watch' }}</span>
+  {%- elif '🔴' in v or 'AVOID' in v -%}<span class="rag rag-bad">{{ label or 'Risk' }}</span>
+  {%- else -%}<span class="rag rag-na">{{ label or 'N/A' }}</span>
+  {%- endif -%}
+{% endmacro %}
+
+{% macro checklist_table(rows, col2_label="Criterion", col3_label="Finding") %}
+  <table class="analysis-table">
+    <thead><tr>
+      <th class="col-num">No.</th>
+      <th class="col-crit">{{ col2_label }}</th>
+      <th class="col-find">{{ col3_label }}</th>
+      <th class="col-status">Verdict</th>
+    </tr></thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td class="col-num">{{ "%02d"|format(row.num|int) if row.num and row.num|string|int > 0 else row.num }}</td>
+        <td class="col-crit">{{ row.col2 }}</td>
+        <td class="col-find">{{ row.col3 }}</td>
+        <td class="col-status">{{ rag_badge(row.verdict) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endmacro %}
+
+{% macro score_line(score, verdict, label) %}
+  <div class="score-line">
+    <span><span class="num">{{ score.green }}</span> good</span>
+    <span><span class="num">{{ score.amber }}</span> watch</span>
+    <span><span class="num">{{ score.red }}</span> risk</span>
+    {% if score.na %}<span><span class="num">{{ score.na }}</span> n/a</span>{% endif %}
+    <span class="score-arrow">{{ label }} → {{ rag_label(verdict, label) }}</span>
+  </div>
+{% endmacro %}
+
+{% macro dual_callouts(concerns, strengths) %}
+  {% if concerns or strengths %}
+  <div class="dual-callouts">
+    {% if concerns %}
+    <div class="callout-box callout-concerns">
+      <div class="callout-title">Key concerns</div>
+      {% for c in concerns %}<div class="callout-item">{{ c }}</div>{% endfor %}
+    </div>
+    {% endif %}
+    {% if strengths %}
+    <div class="callout-box callout-strengths">
+      <div class="callout-title">Key strengths</div>
+      {% for s in strengths %}<div class="callout-item">{{ s }}</div>{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro dim_table(rows, overall_label, overall_score, overall_verdict) %}
+  <table class="dim-table">
+    <thead><tr><th class="dim-name">Dimension</th><th class="dim-score">Score / Detail</th><th class="dim-verdict">Verdict</th></tr></thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>
+        <td class="dim-name">{{ r.name }}</td>
+        <td class="dim-score">{{ r.score }}</td>
+        <td class="dim-verdict">{{ rag_badge(r.verdict) }}</td>
+      </tr>
+      {% endfor %}
+      <tr class="dim-overall">
+        <td class="dim-name">{{ overall_label }}</td>
+        <td class="dim-score">{{ overall_score }}</td>
+        <td class="dim-verdict">{{ rag_badge(overall_verdict) }}</td>
+      </tr>
+    </tbody>
+  </table>
+{% endmacro %}
+
+<!-- ═══════════════════ COVER ═══════════════════ -->
+<section class="page cover cover-verdict-{{ verdict_class }}">
+  <div class="cover-inner">
+    <div class="cover-top">
+      <div class="cover-mark"><img src="{{ company_logo }}" alt="{{ company_name }}"></div>
+      <div class="cover-meta-top">
+        <span class="label">Ticker</span>
+        <span>{{ ticker }}</span>
+        <span class="label">Sector</span>
+        <span>{{ sector }}</span>
+        <span class="label">Date</span>
+        <span>{{ date }}</span>
+      </div>
+    </div>
+
+    <div class="cover-eyebrow">Phase 1 · Fundamental Analysis</div>
+    <h1 class="cover-company">{{ company_name }}</h1>
+    <p class="cover-tagline">A view across <span class="italic">management</span>, industry, financials, valuation &amp; multi-bagger fitness.</p>
+
+    <div class="cover-verdict">
+      <div>
+        <div class="cover-verdict-label">Overall verdict</div>
+        <div class="cover-verdict-value">{{ overall_verdict }}</div>
+      </div>
+    </div>
+
+    <div class="cover-pillars">
+      <div class="cover-pillar">Mgmt<span class="num">A · B</span></div>
+      <div class="cover-pillar">Industry<span class="num">B</span></div>
+      <div class="cover-pillar">Financials<span class="num">C — F</span></div>
+      <div class="cover-pillar">Valuation<span class="num">G</span></div>
+      <div class="cover-pillar">Multi-bagger<span class="num">H</span></div>
+    </div>
+  </div>
+
+  <div class="cover-footer-bar">
+    <span>AI-assisted analyst report · verify all data independently</span>
+    <span>{{ date }}</span>
+  </div>
+</section>
+
+<!-- ═══════════════════ EXEC SUMMARY ═══════════════════ -->
+<section class="page">
+  <div class="eyebrow">01 · Overview</div>
+  <h2 class="section-heading">Executive <span class="accent">summary</span></h2>
+  <div class="section-meta">{{ ticker }} · {{ date }}</div>
+
+  <div class="scorecard-grid">
+    {% for card in scorecard_cards %}
+    <div class="scorecard">
+      <div class="scorecard-label"><span>{{ card.label }}</span>{{ rag_badge(card.value) }}</div>
+      <div class="scorecard-value">{{ card.value if card.value not in ['🟢','🟡','🔴','⬜'] else (card.label) }}</div>
+      <div class="scorecard-sub">{{ card.sub }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="summary-cols">
+    <div>
+      <div class="summary-col-head risks-head"><span class="rag-dot-only rag-bad"></span>Top 3 risks</div>
+      {% for r in top3_risks %}
+      <div class="summary-item">
+        <div class="summary-item-title">{{ r.title }}</div>
+        <div class="summary-item-body">{{ r.body }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <div>
+      <div class="summary-col-head positives-head"><span class="rag-dot-only rag-good"></span>Top 3 positives</div>
+      {% for p in top3_positives %}
+      <div class="summary-item">
+        <div class="summary-item-title">{{ p.title }}</div>
+        <div class="summary-item-body">{{ p.body }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if recommended_next %}
+  <div class="recommended-box">
+    <span class="label">Recommended next step</span>
+    {{ recommended_next }}
+  </div>
+  {% endif %}
+
+  {{ page_footer() }}
+</section>
+
+<!-- ═══════════════════ MANAGEMENT TEAM ═══════════════════ -->
+<section class="page">
+  <div class="eyebrow">02 · People</div>
+  <h2 class="section-heading">Management <span class="accent">team</span></h2>
+  <div class="section-meta">Promoter, board &amp; key executives</div>
+
+  {% if mgmt_summary %}<div class="mgmt-summary-box">{{ mgmt_summary }}</div>{% endif %}
+  {% if management_cards %}
+  <div class="people-grid">
+    {% for card in management_cards %}
+    <div class="person-card">
+      <div class="person-photo-wrap"><img src="{{ card.img_data_url }}" class="person-photo" alt="{{ card.name }}"></div>
+      <div class="person-name">{{ card.name }}</div>
+      {% if card.title %}<div class="person-title">{{ card.title }}</div>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {{ page_footer() }}
+</section>
+
+<!-- ═══════════════════ MGMT ANALYSIS ═══════════════════ -->
+<section class="page">
+  <div class="eyebrow">A · Qualitative</div>
+  <h2 class="section-heading">Management <span class="accent">analysis</span></h2>
+
+  <div class="sub-heading">A1 — Integrity (10 criteria)</div>
+  {{ checklist_table(integrity_rows, "Criterion", "Finding") }}
+  {{ score_line(integrity_score, integrity_verdict, "Integrity") }}
+  {% if integrity_concerns %}
+  <div class="callout-box callout-concerns" style="margin-bottom: 14pt">
+    <div class="callout-title">Key integrity concerns</div>
+    {% for c in integrity_concerns %}<div class="callout-item">{{ c }}</div>{% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="sub-heading">A2 — Skillset (4 criteria)</div>
+  {{ checklist_table(skillset_rows, "Criterion", "Finding") }}
+  {{ score_line(skillset_score, skillset_verdict, "Skillset") }}
+
+  {% if second_gen_rows %}
+  <div class="sub-heading">Second-generation transition</div>
+  <table class="sg-table">
+    <thead><tr><th>Category</th><th>Signal</th><th>Assessment</th></tr></thead>
+    <tbody>
+    {% for row in second_gen_rows %}
+      <tr>
+        <td>{{ row.col2 }}</td>
+        <td style="color: var(--text-muted);">{{ row.col3 }}</td>
+        <td><span class="{% if 'Strong' in row.verdict %}sg-strong{% else %}sg-weak{% endif %}">{{ row.verdict }}</span></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  {{ page_footer() }}
+</section>
+
+<!-- ═══════════════════ INDUSTRY ═══════════════════ -->
+<section class="page">
+  <div class="eyebrow">B · Industry</div>
+  <h2 class="section-heading">Industry <span class="accent">landscape</span></h2>
+
+  <div class="products-industry-top">
+    <div>
+      <div class="sub-heading">Products &amp; brands</div>
+      {% if product_images %}
+      <div class="products-grid">
+        {% for prod in product_images %}
+        <div class="product-item">
+          <img src="{{ prod.img_data_url }}" alt="{{ prod.name }}">
+          {% if prod.name %}<div class="product-name">{{ prod.name[:20] }}</div>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div style="font-size:8pt; color:var(--text-dim); padding:10pt 0; font-family:var(--font-mono);">— Product images unavailable —</div>
+      {% endif %}
+    </div>
+    <div>
+      <div class="sub-heading">Industry lifecycle</div>
+      <div class="stage-card {{ stage_class }}">
+        <div class="stage-label">Current stage</div>
+        <div class="stage-value">{{ industry_stage }}</div>
+        {% if stage_rationale %}<div class="stage-rationale">{{ stage_rationale[:250] }}</div>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% if stage_signals %}
+  <table class="signals-table">
+    <thead><tr><th>Signal</th><th>Observation</th></tr></thead>
+    <tbody>
+      {% for s in stage_signals %}<tr><td>{{ s.signal }}</td><td>{{ s.observation }}</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  <div class="sub-heading">B2 — Five forces &amp; India-specific</div>
+  <table class="analysis-table">
+    <thead><tr>
+      <th class="col-num">No.</th>
+      <th class="col-crit">Force</th>
+      <th class="col-find">Assessment</th>
+      <th class="col-status">Verdict</th>
+    </tr></thead>
+    <tbody>
+    {% for row in forces_rows %}
+      <tr>
+        <td class="col-num">{{ "%02d"|format(row.num|int) if row.num and row.num|string|int > 0 else row.num }}</td>
+        <td class="col-crit">{{ row.col2 }}</td>
+        <td class="col-find">{{ row.col3 }}</td>
+        <td class="col-status">{{ rag_badge(row.verdict) }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="industry-overall-bar">
+    <span><strong>Industry overall</strong> — {{ industry_overall_verdict }}</span>
+    {% if forces_summary %}<span class="summary-text">{{ forces_summary }}</span>{% endif %}
+  </div>
+
+  {{ page_footer() }}
+</section>
+
+<!-- ═══════════════════ FINANCIAL DASHBOARD ═══════════════════ -->
+<section class="page">
+  <div class="eyebrow">C — F · Financial pillars</div>
+  <h2 class="section-heading">Financial health <span class="accent">at a glance</span></h2>
+  <div class="section-meta">
+    {% if balance_sheet.data_date %}Data as of {{ balance_sheet.data_date }}{% endif %}
+    {% if balance_sheet.data_source %} · Source: {{ balance_sheet.data_source }}{% endif %}
+  </div>
+
+  <div class="fin-pillar-grid">
+    {% for p in financial_pillars %}
+    <div class="fin-pillar rag-top-{{ p.rag_class_dz }}">
+      <div class="fin-pillar-letter">PART {{ p.letter }}</div>
+      <div class="fin-pillar-name">{{ p.name }}</div>
+      <div class="fin-pillar-score {{ p.rag_class_dz }}">{{ p.score_display }}</div>
+      <div class="fin-pillar-tag">{{ p.tagline }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if financial_headline_stats %}
+  <div class="sub-heading">Headline numbers</div>
+  <div class="fin-headline-grid">
+    {% for s in financial_headline_stats %}
+    <div class="fin-stat">
+      <div class="fin-stat-label">{{ s.label }}</div>
+      <div class="fin-stat-value value-{{ s.rag_class_dz or 'good' }}">{{ s.value }}</div>
+      <div class="fin-stat-sub">{{ s.sub }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if financial_summary %}
+  <div class="fin-summary-box"><strong>Summary —</strong> {{ financial_summary }}</div>
+  {% endif %}
+
+  {{ page_footer() }}
+</section>
+
+<!-- ═══════════════════ BALANCE SHEET (C) ═══════════════════ -->
+<section class="page">
+  <div class="eyebrow">C · Solvency &amp; structure</div>
+  <h2 class="section-heading">Balance <span class="accent">sheet</span></h2>
+  <div class="section-meta">
+    {% if balance_sheet.data_date %}Data as of {{ balance_sheet.data_date }}{% endif %}
+    {% if balance_sheet.data_source %} · Source: {{ balance_sheet.data_source }}{% endif %}
+  </div>
+
+  {{ checklist_table(balance_sheet.rows, "Criterion", "Key numbers") }}
+  {{ score_line(balance_sheet.score, balance_sheet.overall_verdict, "Balance sheet") }}
+  {{ dual_callouts(balance_sheet.concerns, balance_sheet.strengths) }}
+
+  {% if balance_sheet.dimensions %}
+  <div class="sub-heading">Dimension breakdown</div>
+  {{ dim_table(balance_sheet.dimensions, "Balance sheet overall", balance_sheet.overall_score, balance_sheet.overall_verdict) }}
+  {% endif %}
+
+  {{ page_footer() }}
+</section>
+
+<!-- ═══════════════════ P&L (D) ═══════════════════ -->
+<section class="page">
+  <div class="eyebrow">D · Earnings quality</div>
+  <h2 class="section-heading">Profit <span class="accent">&amp; loss</span></h2>
+  <div class="section-meta">
+    {% if pnl.data_date %}Data as of {{ pnl.data_date }}{% endif %}
+    {% if pnl.data_source %} · Source: {{ pnl.data_source }}{% endif %}
+  </div>
+
+  {{ checklist_table(pnl.rows, "Criterion", "Key numbers") }}
+  {{ score_line(pnl.score, pnl.overall_verdict, "P&L") }}
+  {{ dual_callouts(pnl.concerns, pnl.strengths) }}
+
+  {% if pnl.dimensions %}
+  <div class="sub-heading">Dimension breakdown</div>
+  {{ dim_table(pnl.dimensions, "P&L overall", pnl.overall_score, pnl.overall_verdict) }}
+  {% endif %}
+
+  {{ page_footer() }}
+</section>
+
+<!-- ═══════════════════ CASH FLOW (E) ═══════════════════ -->
+<section class="page">
+  <div class="eyebrow">E · Cash quality</div>
+  <h2 class="section-heading">Cash <span class="accent">flow</span></h2>
+  <div class="section-meta">
+    {% if cashflow.data_date %}Data as of {{ cashflow.data_date }}{% endif %}
+    {% if cashflow.data_source %} · Source: {{ cashflow.data_source }}{% endif %}
+  </div>
+
+  {{ checklist_table(cashflow.rows, "Criterion", "Key numbers") }}
+  {{ score_line(cashflow.score, cashflow.overall_verdict, "Cash flow") }}
+  {{ dual_callouts(cashflow.concerns, cashflow.strengths) }}
+
+  {% if cashflow.dimensions %}
+  <div class="sub-heading">Dimension breakdown</div>
+  {{ dim_table(cashflow.dimensions, "Cash flow overall", cashflow.overall_score, cashflow.overall_verdict) }}
+  {% endif %}
+
+  {{ page_footer() }}
+</section>
+
+<!-- ═══════════════════ RETURN RATIOS (F) ═══════════════════ -->
+<section class="page">
+  <div class="eyebrow">F · Capital efficiency</div>
+  <h2 class="section-heading">Return <span class="accent">ratios</span></h2>
+  <div class="section-meta">
+    {% if returns.data_date %}Data as of {{ returns.data_date }}{% endif %}
+    {% if returns.data_source %} · Source: {{ returns.data_source }}{% endif %}
+  </div>
+
+  {{ checklist_table(returns.rows, "Criterion", "Key numbers") }}
+  {{ score_line(returns.score, returns.overall_verdict, "Returns") }}
+  {{ dual_callouts(returns.concerns, returns.strengths) }}
+
+  {% if returns.dimensions %}
+  <div class="sub-heading">Dimension breakdown</div>
+  {{ dim_table(returns.dimensions, "Return ratios overall", returns.overall_score, returns.overall_verdict) }}
+  {% endif %}
+
+  {{ page_footer() }}
+</section>
+
+<!-- ═══════════════════ VALUATION (G) ═══════════════════ -->
+<section class="page">
+  <div class="eyebrow">G · Price discovery</div>
+  <h2 class="section-heading"><span class="accent">Valuation</span></h2>
+  <div class="section-meta">
+    {% if valuation.data_date %}{{ valuation.data_date }}{% endif %}
+    {% if valuation.cmp %} · CMP ₹{{ valuation.cmp }}{% endif %}
+    {% if valuation.market_cap %} · Mkt cap ₹{{ valuation.market_cap }} cr{% endif %}
+    {% if valuation.data_source %} · {{ valuation.data_source }}{% endif %}
+  </div>
+
+  {% if valuation.banner_text %}
+  <div class="val-banner">
+    <div class="val-banner-eyebrow">Valuation flag</div>
+    <div class="val-banner-text">{{ valuation.banner_text }}</div>
+    {% if valuation.banner_sub %}<div class="val-banner-sub">{{ valuation.banner_sub }}</div>{% endif %}
+  </div>
+  {% endif %}
+
+  {% if valuation.multiples %}
+  <div class="val-multiples-grid">
+    {% for m in valuation.multiples %}
+    <div class="val-multiple">
+      <div class="val-multiple-label">{{ m.label }}</div>
+      <div class="val-multiple-value">{{ m.value }}</div>
+      {% if m.peer %}<div class="val-multiple-peer">{{ m.peer }}</div>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {{ checklist_table(valuation.rows, "Criterion", "Key numbers") }}
+  {{ score_line(valuation.score, valuation.overall_verdict, "Valuation") }}
+  {{ dual_callouts(valuation.concerns, valuation.strengths) }}
+
+  {% if valuation.context %}
+  <div class="callout-box callout-context" style="margin: 8pt 0 14pt">
+    <div class="callout-title">Valuation context</div>
+    {% for c in valuation.context %}<div class="callout-item">{{ c }}</div>{% endfor %}
+  </div>
+  {% endif %}
+
+  {% if valuation.dimensions %}
+  <div class="sub-heading">Dimension breakdown</div>
+  {{ dim_table(valuation.dimensions, "Valuation overall", valuation.overall_score, valuation.overall_verdict) }}
+  {% endif %}
+
+  {{ page_footer() }}
+</section>
+
+<!-- ═══════════════════ MULTI-BAGGER (H) ═══════════════════ -->
+<section class="page">
+  <div class="eyebrow">H · Compounder screen</div>
+  <h2 class="section-heading">Multi-bagger <span class="accent">screening</span></h2>
+
+  <div class="mb-verdict-box {% if multibagger.is_candidate %}is-candidate{% endif %}">
+    <div class="mb-verdict-glyph">{% if multibagger.is_candidate %}★{% else %}◐{% endif %}</div>
+    <div>
+      <div class="mb-verdict-tag">Multi-bagger verdict</div>
+      <div class="mb-verdict-title">{{ multibagger.verdict_text }}</div>
+      {% if multibagger.time_horizon %}<div class="mb-verdict-time">Time horizon — {{ multibagger.time_horizon }}</div>{% endif %}
+    </div>
+    <div class="mb-verdict-score">
+      <div class="mb-verdict-tag">Score</div>
+      <div class="mb-verdict-score-num">{{ multibagger.score.green }}/{{ multibagger.score.total }}</div>
+      <div class="mb-verdict-score-tag">{{ multibagger.score.green }}G · {{ multibagger.score.amber }}A · {{ multibagger.score.red }}R</div>
+    </div>
+  </div>
+
+  {{ checklist_table(multibagger.rows, "Criterion", "Assessment") }}
+  {{ dual_callouts(multibagger.risks, multibagger.drivers) }}
+
+  {{ page_footer() }}
+</section>
+
+<!-- ═══════════════════ FINAL VERDICT ═══════════════════ -->
+<section class="page">
+  <div class="eyebrow">Closing</div>
+  <h2 class="section-heading">Overall <span class="accent">verdict</span></h2>
+
+  <table class="verdict-table">
+    <thead>
+      <tr><th class="vt-dim">Dimension</th><th class="vt-detail">Detail</th><th class="vt-rag">Verdict</th></tr>
+    </thead>
+    <tbody>
+      {% for r in overall_dimensions %}
+      <tr>
+        <td class="vt-dim">{{ r.name }}</td>
+        <td class="vt-detail">{{ r.detail }}</td>
+        <td class="vt-rag">{{ rag_label(r.verdict) }}</td>
+      </tr>
+      {% endfor %}
+      <tr class="vt-overall">
+        <td class="vt-dim">Overall</td>
+        <td class="vt-detail">{{ overall_summary or "Final view across all 10 dimensions." }}</td>
+        <td class="vt-rag">{{ rag_label(overall_verdict, overall_verdict) }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  {% if entry_triggers %}
+  <div class="entry-triggers-box">
+    <div class="entry-triggers-title">Entry triggers to watch for</div>
+    {% for t in entry_triggers %}<div class="entry-trigger-item">{{ t }}</div>{% endfor %}
+  </div>
+  {% endif %}
+
+  {% if recommended_next %}
+  <div class="final-rec-box">
+    <div class="final-rec-title">Final recommendation</div>
+    {{ recommended_next }}
+  </div>
+  {% endif %}
+
+  {{ page_footer() }}
+</section>
+
+<!-- ═══════════════════ DATA SOURCES ═══════════════════ -->
+<section class="page">
+  <div class="eyebrow">Appendix</div>
+  <h2 class="section-heading">Data <span class="accent">sources</span></h2>
+
+  <table class="sources-table">
+    <thead>
+      <tr><th class="col-point">Data point</th><th class="col-source">Source</th><th class="col-date">Accessed</th></tr>
+    </thead>
+    <tbody>
+      {% for src in data_sources %}
+      <tr>
+        <td class="col-point">{{ src.point }}</td>
+        <td class="col-source">{{ src.source }}</td>
+        <td class="col-date">{{ src.date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="disclaimer-box">
+    <strong>Disclaimer.</strong> This report is AI-assisted and based on publicly available data as of {{ date }}.
+    It is informational only and is not financial advice, an investment recommendation, or a solicitation to buy
+    or sell any security. All findings should be independently verified before any investment decision. The analyst
+    accepts no liability for decisions made based on this report.
+  </div>
+
+  <div class="page-footer">
+    <span>{{ company_name }} · {{ ticker }} · Phase 1 FA</span>
+    <span class="num">{{ date }}</span>
+  </div>
+</section>
+
+</body>
+</html>
